@@ -1,0 +1,5 @@
+add_executable(breadth_first_search_test breadth_first_search_test.cpp)
+target_link_libraries(breadth_first_search_test minos)
+
+add_executable(dijkstra_search_test dijkstra_search_test.cpp)
+target_link_libraries(dijkstra_search_test minos)
