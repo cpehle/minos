@@ -117,14 +117,14 @@ struct GridWithWeights: SquareGrid {
 };
 
 struct GridWithCapacity: SquareGrid {
-  std::map<std::pair<GridLocation,GridLocation>, double> capacity;
-  std::map<std::pair<GridLocation,GridLocation>, double> utilization;
+  std::map<GridLocation, double> capacity;
+  std::map<GridLocation, double> utilization;
   int iteration;
 
   GridWithCapacity(int w, int h) : SquareGrid(w, h) , iteration(0) {}
   double cost(GridLocation from_node, GridLocation to_node) const {
-    auto cap = capacity.find(std::make_pair(from_node, to_node));
-    auto util = utilization.find(std::make_pair(from_node, to_node));
+    auto cap = capacity.find(to_node);
+    auto util = utilization.find(to_node);
     double base_cost = 1.0;
 
     if (cap != capacity.end() && util != utilization.end()) {
@@ -139,8 +139,8 @@ struct GridWithCapacity: SquareGrid {
 
   double congestion() {
     double congestion = 0.0;
-    for (auto [edge,util] : utilization) {
-      auto cap = capacity.find(edge);
+    for (auto [vertex,util] : utilization) {
+      auto cap = capacity.find(vertex);
       if (cap != capacity.end()) {
         double penalty = std::max(util - cap->second, 0.0);
         congestion += penalty;
@@ -150,22 +150,18 @@ struct GridWithCapacity: SquareGrid {
   }
 
   void reset_utilization() {
-    for (auto& [edge,util] : utilization) {
+    for (auto& [vertex,util] : utilization) {
       util = 0.0;
     }
   }
 
-  void increment_utilization_at(GridLocation from_node, GridLocation to_node) {
-      auto util = utilization.find(std::make_pair(from_node, to_node));
-      if (util != utilization.end()) {
-          util->second += 1.0;
-      } else {
-          utilization.emplace(std::make_pair(from_node, to_node), 1.0);
-      }
+  void increment_utilization_at(GridLocation node) {
+      utilization[node] += 1.0;
   }
 };
 
-void add_capacity(GridWithCapacity& grid, int x1, int y1, int x2, int y2, double capacity);
+void set_capacity(GridWithCapacity& grid, int x1, int y1, int x2, int y2, double capacity);
+void set_utilization(GridWithCapacity& grid, int x1, int y1, int x2, int y2, double utilization);
 
 SquareGrid make_diagram1();
 GridWithWeights make_diagram4();

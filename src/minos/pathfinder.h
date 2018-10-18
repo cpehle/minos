@@ -15,10 +15,9 @@ auto pathfinder(Graph graph, std::vector<Location> starts, std::vector<std::vect
     {
         int idx = 0; 
         for (auto start : starts) {
-            auto came_from = breadth_first_search<Location, Graph>(start);
+            auto came_from = breadth_first_search<Location, Graph>(graph, start);
             for (auto target : targets[idx]) {
-                auto path = reconstruct_path(start, target, came_from);
-                paths[idx].push_back(path);
+                paths[idx] = reconstruct_path<Location>(start, target, came_from);
             }
             idx++;
         }
@@ -30,23 +29,27 @@ auto pathfinder(Graph graph, std::vector<Location> starts, std::vector<std::vect
         }
     }
 
+    draw_grid(graph, 2, &graph.utilization);
+
     {
     int iteration = 0; 
+    std::cout << iteration << ":" <<  graph.congestion() << std::endl;
+
     while (graph.congestion() != 0.0) {
+        std::cout << iteration << ":" <<  graph.congestion() << std::endl;
         graph.iteration = iteration;
         int idx = 0;
         for (auto start : starts) {
-            auto [came_from, cost_so_far] = dijkstra_search<Location, Graph>(start);
+            auto [came_from, cost_so_far] = dijkstra_search<Location, Graph>(graph, start);
             for (auto target : targets[idx]) {
-                auto path = reconstruct_path(start, target, came_from);
-                paths[idx].push_back(path);
+                paths[idx] = reconstruct_path(start, target, came_from);
             }
             idx++;
         }
         graph.reset_utilization();
         for (auto path : paths) {
-            for (int i = 0; i < path.size()-1; i++) {
-                graph.increment_utilization_at(path[i], path[i+1]);
+            for (auto vertex : path) {
+                graph.increment_utilization_at(vertex);
             }
         }
         iteration++;
