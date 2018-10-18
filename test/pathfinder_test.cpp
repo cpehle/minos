@@ -5,20 +5,18 @@
 
 int main() {
     minos::GridWithCapacity grid = minos::make_diagram5();
-    minos::draw_grid(grid, 2, &grid.capacity);
-    std::cout << std::endl;
-    minos::draw_grid(grid, 2, &grid.utilization);
 
     using L = minos::GridLocation;
-    std::vector<L> starts = {L{1,4}, L{1,5}};
+    std::vector<L> starts = {L{0,4}, L{1,5}, L{1,6}};
     std::vector<std::vector<L>> targets = {
-        {L{8, 5}},
-        {L{8, 12}},
+        {L{8, 5}, L{8,6}, L{9,6}},
+        {L{8, 7}},
+        {L{9, 8}}
     };
 
     auto paths = minos::pathfinder(grid, starts, targets);
-    std::cout << std::endl;
-    minos::draw_grid(grid, 2, nullptr, nullptr, &paths[0]);
-    std::cout << std::endl;
-    minos::draw_grid(grid, 2, nullptr, nullptr, &paths[1]);
+    for (auto path : paths) {
+        minos::draw_grid(grid, 2, nullptr, nullptr, &path);
+        std::cout << std::endl;
+    }
 }

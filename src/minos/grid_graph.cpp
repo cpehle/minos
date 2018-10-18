@@ -62,7 +62,7 @@ GridWithCapacity make_diagram5() {
   add_rect(grid, 21, 0, 23, 7);
   add_rect(grid, 23, 5, 26, 7);
 
-  set_capacity(grid,0,0,30,15,1.0);
+  set_capacity(grid,0,0,30,15,2.0);
   set_utilization(grid,0,0,30,15,0.0);
   return grid;
 }
