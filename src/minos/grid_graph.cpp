@@ -17,10 +17,10 @@ void add_rect(SquareGrid& grid, int x1, int y1, int x2, int y2) {
 void add_capacity(GridWithCapacity& grid, int x1, int y1, int x2, int y2, double capacity) {
   for (int x = x1; x < x2; ++x) {
     for (int y = y1; y < y2; ++y) {
-      grid.capacity.insert(std::make_pair(GridLocation{x, y},GridLocation{x+1,y}), capacity);
-      grid.capacity.insert(std::make_pair(GridLocation{x, y},GridLocation{x-1,y}), capacity);
-      grid.capacity.insert(std::make_pair(GridLocation{x, y},GridLocation{x,y+1}), capacity);
-      grid.capacity.insert(std::make_pair(GridLocation{x, y},GridLocation{x,y-1}), capacity);
+      grid.capacity.emplace(std::make_pair(GridLocation{x, y},GridLocation{x+1,y}), capacity);
+      grid.capacity.emplace(std::make_pair(GridLocation{x, y},GridLocation{x-1,y}), capacity);
+      grid.capacity.emplace(std::make_pair(GridLocation{x, y},GridLocation{x,y+1}), capacity);
+      grid.capacity.emplace(std::make_pair(GridLocation{x, y},GridLocation{x,y-1}), capacity);
     }
   }
 }
@@ -57,7 +57,7 @@ GridWithCapacity make_diagram5() {
   add_rect(grid, 21, 0, 23, 7);
   add_rect(grid, 23, 5, 26, 7);
 
-  add_capacity(1,1,29,14,1.0);
+  add_capacity(grid, 1,1,29,14,1.0);
 
   return grid;
 }

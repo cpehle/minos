@@ -8,17 +8,20 @@ namespace minos {
 
 /// pathfinder algorithm
 template<typename Location, typename Graph>
-auto pathfinder(Graph g, std::vector<Location> starts, std::vector<std::vector<Location>> targets) -> std::vector<std::vector<Location>> {
+auto pathfinder(Graph graph, std::vector<Location> starts, std::vector<std::vector<Location>> targets) -> std::vector<std::vector<Location>> {
     std::vector<std::vector<Location>> paths;
     paths.reserve(starts.size());
 
-    for (int idx = 0; auto start : starts) {
-        auto came_from = breadth_first_search<Location, Graph>(start);
-        for (auto target : targets[idx]) {
-            auto path = reconstruct_path(start, target, came_from);
-            paths[idx].push_back(path);
+    {
+        int idx = 0; 
+        for (auto start : starts) {
+            auto came_from = breadth_first_search<Location, Graph>(start);
+            for (auto target : targets[idx]) {
+                auto path = reconstruct_path(start, target, came_from);
+                paths[idx].push_back(path);
+            }
+            idx++;
         }
-        idx++;
     }
 
     for (auto path : paths) {
@@ -27,10 +30,12 @@ auto pathfinder(Graph g, std::vector<Location> starts, std::vector<std::vector<L
         }
     }
 
-    while (int iteration = 0; graph.congestion() != 0.0) {
+    {
+    int iteration = 0; 
+    while (graph.congestion() != 0.0) {
         graph.iteration = iteration;
-
-        for (int idx = 0; auto start : starts) {
+        int idx = 0;
+        for (auto start : starts) {
             auto [came_from, cost_so_far] = dijkstra_search<Location, Graph>(start);
             for (auto target : targets[idx]) {
                 auto path = reconstruct_path(start, target, came_from);
@@ -38,16 +43,14 @@ auto pathfinder(Graph g, std::vector<Location> starts, std::vector<std::vector<L
             }
             idx++;
         }
-
         graph.reset_utilization();
-
         for (auto path : paths) {
             for (int i = 0; i < path.size()-1; i++) {
                 graph.increment_utilization_at(path[i], path[i+1]);
             }
         }
-
         iteration++;
+    }
     }
 
     return paths;
