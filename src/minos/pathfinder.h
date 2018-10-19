@@ -10,12 +10,11 @@ namespace minos {
 template<typename Location, typename Graph>
 auto pathfinder(Graph graph, std::vector<Location> starts, std::vector<std::vector<Location>> targets) -> std::vector<std::vector<Location>> {
     std::vector<std::vector<Location>> paths;
-    paths.reserve(starts.size());
 
     {
         int idx = 0; 
         for (auto start : starts) {
-            auto came_from = breadth_first_search<Location, Graph>(graph, start);
+            auto [came_from, cost_so_far] = dijkstra_search<Location, Graph>(graph, start);
             for (auto target : targets[idx]) {
                 paths.push_back(reconstruct_path<Location>(start, target, came_from));
             }
