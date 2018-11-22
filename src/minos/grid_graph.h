@@ -61,7 +61,6 @@ struct SquareGrid {
     }
 
     if ((id.x + id.y) % 2 == 0) {
-      // aesthetic improvement on square grids
       std::reverse(results.begin(), results.end());
     }
 
@@ -109,10 +108,15 @@ void draw_grid(const Graph& graph, int field_width,
 void add_rect(SquareGrid& grid, int x1, int y1, int x2, int y2);
 
 struct GridWithWeights: SquareGrid {
-  std::set<GridLocation> forests;
+  std::map<GridLocation,double> forests;
   GridWithWeights(int w, int h): SquareGrid(w, h) {}
   double cost(GridLocation from_node, GridLocation to_node) const {
-    return forests.find(to_node) != forests.end()? 5 : 1;
+    auto node_it = forests.find(to_node);
+    if (node_it != forests.end()) { 
+      return node_it->second;
+    } else {
+      return 1.0;
+    }
   }
 };
 
@@ -166,5 +170,4 @@ void set_utilization(GridWithCapacity& grid, int x1, int y1, int x2, int y2, dou
 SquareGrid make_diagram1();
 GridWithWeights make_diagram4();
 GridWithCapacity make_diagram5();
-
 }
