@@ -14,20 +14,21 @@
 #include <iostream>
 
 void draw(SkCanvas* canvas) {
-	canvas->clear(SK_ColorWHITE);
-	SkPaint paint;
-	paint.setTextSize(32.0f);
-	paint.setAntiAlias(true);
-	paint.setColor(SK_ColorBLACK);
-	paint.setStyle(SkPaint::kFill_Style);
+    canvas->clear(SK_ColorWHITE);
+    SkPaint paint;
+    paint.setTextSize(32.0f);
+    paint.setAntiAlias(true);
+    paint.setColor(SK_ColorBLACK);
+    paint.setStyle(SkPaint::kFill_Style);
     canvas->drawString("Skia Test", 20, 32, paint);
 }
 
-const int kWidth = 960;
-const int kHeight = 640;
 
 int main() {
     uint32_t windowFlags = 0;
+    const int kWidth = 960;
+    const int kHeight = 640;
+
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -56,27 +57,27 @@ int main() {
     glClearStencil(0);
     glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     GrContextOptions options;
-	auto context = GrContext::MakeGL(nullptr, options);
-	GrGLFramebufferInfo framebufferInfo;
-	framebufferInfo.fFBOID = 0; // assume default framebuffer
-	framebufferInfo.fFormat = GL_RGBA8;
+    auto context = GrContext::MakeGL(nullptr, options);
+    GrGLFramebufferInfo framebufferInfo;
+    framebufferInfo.fFBOID = 0; // assume default framebuffer
+    framebufferInfo.fFormat = GL_RGBA8;
 
-	SkColorType colorType;
-	if (kRGBA_8888_GrPixelConfig == kSkia8888_GrPixelConfig) {
-		colorType = kRGBA_8888_SkColorType;
-	}
-	else {
-		colorType = kBGRA_8888_SkColorType;
-	}
-	GrBackendRenderTarget backendRenderTarget(kWidth, kHeight,
-		0, // sample count
-		0, // stencil bits
-		framebufferInfo);
+    SkColorType colorType;
+    if (kRGBA_8888_GrPixelConfig == kSkia8888_GrPixelConfig) {
+        colorType = kRGBA_8888_SkColorType;
+    }
+    else {
+        colorType = kBGRA_8888_SkColorType;
+    }
+    GrBackendRenderTarget backendRenderTarget(kWidth, kHeight,
+        0, // sample count
+        0, // stencil bits
+        framebufferInfo);
 
-	auto surface = SkSurface::MakeFromBackendRenderTarget(context.get(), backendRenderTarget, kBottomLeft_GrSurfaceOrigin, colorType, nullptr, nullptr);
-	if (surface == nullptr) abort();
+    auto surface = SkSurface::MakeFromBackendRenderTarget(context.get(), backendRenderTarget, kBottomLeft_GrSurfaceOrigin, colorType, nullptr, nullptr);
+    if (surface == nullptr) abort();
 
-	auto canvas = surface->getCanvas();
+    auto canvas = surface->getCanvas();
     for (;;) {
         bool quit = false;
         SDL_Event event;
