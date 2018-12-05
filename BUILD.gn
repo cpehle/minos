@@ -1,0 +1,9 @@
+executable("hello_world") {
+    sources = [
+        "hello_world.cc",
+    ]
+    deps = [
+        "//third_party/skia",
+        "//third_party/libsdl"
+    ]
+}
